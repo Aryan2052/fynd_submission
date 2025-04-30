@@ -2,7 +2,7 @@
 import { Minus, Plus, Trash } from "lucide-react";
 import { useCartStore } from "../stores/useCartStore";
 
-const CartItem = ({ item }) => {
+const CartItem = ({ item, cartId }) => {
 	const { removeFromCart, updateQuantity } = useCartStore();
 
 	return (
@@ -19,7 +19,7 @@ const CartItem = ({ item }) => {
 							className='inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border
 							 border-gray-600 bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2
 							  focus:ring-emerald-500'
-							onClick={() => updateQuantity(item.id, item.quantity - 1)}
+							onClick={() => updateQuantity(cartId, item.productId, item.quantity - 1)}
 						>
 							<Minus className='text-gray-300' />
 						</button>
@@ -28,7 +28,7 @@ const CartItem = ({ item }) => {
 							className='inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border
 							 border-gray-600 bg-gray-700 hover:bg-gray-600 focus:outline-none 
 						focus:ring-2 focus:ring-emerald-500'
-							onClick={() => updateQuantity(item.id, item.quantity + 1)}
+							onClick={() => updateQuantity(cartId, item.productId, item.quantity + 1)}
 						>
 							<Plus className='text-gray-300' />
 						</button>
@@ -49,7 +49,7 @@ const CartItem = ({ item }) => {
 						<button
 							className='inline-flex items-center text-sm font-medium text-red-400
 							 hover:text-red-300 hover:underline'
-							onClick={() => removeFromCart(item.id)}
+							onClick={() => removeFromCart(cartId, item.productId)}
 						>
 							<Trash />
 						</button>

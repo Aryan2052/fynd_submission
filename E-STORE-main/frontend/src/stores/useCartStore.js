@@ -24,46 +24,33 @@ export const useCartStore = create((set, get) => ({
 
 	addToCart: async (userId, product) => {
 		try {
-			const res = await axios.post("/cart", { 
+			console.log('Adding to cart:', { userId, productId: product.id, product });
+			const res = await axios.post("/cart/add", {
 				userId,
 				productId: product.id,
-				quantity: 1
+				product: {
+					title: product.title,
+					price: product.price,
+					description: product.description,
+					category: product.category,
+					image: product.image
+				}
 			});
 			
-			// If this is the first item, set the cart
-			if (!get().cart) {
-				set({ cart: res.data });
-			} else {
-				// Otherwise update the products array
-				set((state) => ({
-					cart: {
-						...state.cart,
-						products: [...state.cart.products, res.data.products[0]]
-					}
-				}));
-			}
-			
+			console.log('Add to cart response:', res.data);
+			set({ cart: res.data.cart });
 			get().calculateTotals();
 			toast.success("Product added to cart");
 		} catch (error) {
+			console.error('Error adding to cart:', error.response?.data || error);
 			toast.error(error.response?.data?.message || "Failed to add to cart");
 		}
 	},
 
 	removeFromCart: async (cartId, productId) => {
 		try {
-			await axios.delete(`/cart/${cartId}`, {
-				data: { productId }
-			});
-
-			// Update local state
-			set((state) => ({
-				cart: {
-					...state.cart,
-					products: state.cart.products.filter(item => item.id !== productId)
-				}
-			}));
-			
+			const res = await axios.delete(`/cart/${cartId}/product/${productId}`);
+			set({ cart: res.data.cart });
 			get().calculateTotals();
 			toast.success("Item removed from cart");
 		} catch (error) {
@@ -72,29 +59,11 @@ export const useCartStore = create((set, get) => ({
 	},
 
 	updateQuantity: async (cartId, productId, quantity) => {
-		if (quantity === 0) {
-			get().removeFromCart(cartId, productId);
-			return;
-		}
-
 		try {
-			const res = await axios.put(`/api/cart/${cartId}`, { 
-				productId,
-				quantity 
+			const res = await axios.put(`/cart/${cartId}/product/${productId}`, {
+				quantity
 			});
-
-			// Update local state with the updated product
-			set((state) => ({
-				cart: {
-					...state.cart,
-					products: state.cart.products.map(item => 
-						item.id === productId 
-							? { ...item, quantity: quantity }
-							: item
-					)
-				}
-			}));
-			
+			set({ cart: res.data.cart });
 			get().calculateTotals();
 			toast.success("Cart updated");
 		} catch (error) {
@@ -104,12 +73,14 @@ export const useCartStore = create((set, get) => ({
 
 	calculateTotals: () => {
 		const { cart } = get();
-		if (!cart || !cart.products) return;
+		if (!cart || !cart.items) return;
 
-		const subtotal = cart.products.reduce((total, item) => {
-			return total + (item.price * item.quantity);
-		}, 0);
+		const subtotal = cart.items.reduce(
+			(total, item) => total + item.price * item.quantity,
+			0
+		);
+		const total = subtotal; // Add shipping, tax, etc. if needed
 
-		set({ subtotal, total: subtotal });
+		set({ subtotal, total });
 	}
 }));

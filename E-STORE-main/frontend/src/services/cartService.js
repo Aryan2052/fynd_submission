@@ -2,7 +2,7 @@ import api from './api';
 
 export const getCart = async (userId) => {
     try {
-        const response = await api.get(`/carts/user/${userId}`);
+        const response = await api.get(`/cart/user/${userId}`);
         return response.data;
     } catch (error) {
         console.error('Error fetching cart:', error);
@@ -10,12 +10,11 @@ export const getCart = async (userId) => {
     }
 };
 
-export const addToCart = async (userId, productId, quantity = 1) => {
+export const addToCart = async (userId, productId) => {
     try {
-        const response = await api.post('/carts', {
+        const response = await api.post('/cart/add', {
             userId,
-            productId,
-            quantity
+            productId
         });
         return response.data;
     } catch (error) {
@@ -26,7 +25,7 @@ export const addToCart = async (userId, productId, quantity = 1) => {
 
 export const updateCartItem = async (cartId, productId, quantity) => {
     try {
-        const response = await api.put(`/carts/${cartId}/product/${productId}`, {
+        const response = await api.put(`/cart/${cartId}/product/${productId}`, {
             quantity
         });
         return response.data;
@@ -38,7 +37,7 @@ export const updateCartItem = async (cartId, productId, quantity) => {
 
 export const removeFromCart = async (cartId, productId) => {
     try {
-        const response = await api.delete(`/carts/${cartId}/product/${productId}`);
+        const response = await api.delete(`/cart/${cartId}/product/${productId}`);
         return response.data;
     } catch (error) {
         console.error('Error removing from cart:', error);

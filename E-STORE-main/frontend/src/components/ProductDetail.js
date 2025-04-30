@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getProductById } from '../services/productService';
 import { addToCart } from '../services/cartService';
+import { toast } from 'react-toastify';
 
 const ProductDetail = ({ userId }) => {
     const { id } = useParams();
@@ -30,10 +31,11 @@ const ProductDetail = ({ userId }) => {
 
     const handleAddToCart = async () => {
         try {
-            await addToCart(userId, product.id, quantity);
-            // You might want to show a success message or update the cart count here
+            await addToCart(userId, product.id);
+            toast.success('Product added to cart successfully');
         } catch (err) {
             console.error('Error adding to cart:', err);
+            toast.error(err.response?.data?.message || 'Failed to add to cart');
         }
     };
 

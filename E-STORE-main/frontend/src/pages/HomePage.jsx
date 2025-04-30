@@ -2,10 +2,10 @@
 import CategoryItem from "../components/CategoryItem";
 
 const categories = [
-	{ href: "/electronics", name: "Electronics", imageUrl: "/electronics.jpg" },
-	{ href: "/jewelery", name: "Jewelery", imageUrl: "/jewelery.jpg" },
-	{ href: "/men's clothing", name: "Men's Clothing", imageUrl: "/mens-clothing.jpg" },
-	{ href: "/women's clothing", name: "Women's Clothing", imageUrl: "/womens-clothing.jpg" },
+	{ href: "/electronics", name: "Electronics", imageUrl: "/electronics-commons.jpg" },
+	{ href: "/jewelery", name: "Jewelery", imageUrl: "/Jwellery.png" },
+	{ href: "/men's clothing", name: "Men's Clothing", imageUrl: "/Men.jpg" },
+	{ href: "/women's clothing", name: "Women's Clothing", imageUrl: "/Women.jpg" },
 ];
 
 const HomePage = () => {
