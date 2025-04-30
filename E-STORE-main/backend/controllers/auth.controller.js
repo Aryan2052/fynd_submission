@@ -10,17 +10,22 @@ const generateTokens = (userId) => {
 const setCookies = (res, accessToken, refreshToken) => {
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 1000 * 60 * 15
-  })
+    secure: true,
+    sameSite: 'none',
+    maxAge: 1000 * 60 * 15,
+    path: '/',
+    domain: process.env.NODE_ENV === "production" ? '.onrender.com' : 'localhost'
+  });
+  
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 7 * 24 * 60 * 60 * 1000
-  })
-}
+    secure: true,
+    sameSite: 'none',
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    path: '/',
+    domain: process.env.NODE_ENV === "production" ? '.onrender.com' : 'localhost'
+  });
+};
 
 export const signup = async (req, res) => {
   const {email, password, name} = req.body;
