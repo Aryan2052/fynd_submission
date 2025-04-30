@@ -52,8 +52,11 @@ A full-stack e-commerce application built with modern web technologies.
 
 - Node.js (v14 or higher)
 - MongoDB
-- Redis
-- Stripe account (for payment processing)
+  
+## API
+-Fakestore Api for product details.
+-Google Gemini flash 2.0 api for product details.
+
 
 ## Installation
 
@@ -77,8 +80,6 @@ npm install
 ```
 MONGODB_URI=your_mongodb_uri
 JWT_SECRET=your_jwt_secret
-STRIPE_SECRET_KEY=your_stripe_secret_key
-REDIS_URL=your_redis_url
 ```
 
 ## Running the Application
