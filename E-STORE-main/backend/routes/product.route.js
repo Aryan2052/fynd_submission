@@ -12,10 +12,13 @@ import { protectRoute } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.get("/", protectRoute, getAllProducts);
+// Public routes
+router.get("/", getAllProducts);
 router.get("/featured", getFeaturedProducts);
 router.get("/category/:category", getProductsByCategory);
 router.get("/recommendations", getRecommendedProducts);
+
+// Protected routes (require authentication)
 router.post("/", protectRoute, createProduct);
 router.patch("/:id", protectRoute, toggleFeaturedProduct);
 router.delete("/:id", protectRoute, deleteProduct);

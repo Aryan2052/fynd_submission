@@ -13,7 +13,11 @@ export const getAllProducts = async (req, res) => {
 		const response = await axios.get(`${FAKE_STORE_API}/products`);
 		res.json(response.data);
 	} catch (error) {
-		console.log("Error in getAllProducts controller", error.message);
+		console.error("Error in getAllProducts controller:", {
+			message: error.message,
+			response: error.response?.data,
+			status: error.response?.status
+		});
 		res.status(500).json({ message: "Server error", error: error.message });
 	}
 };
@@ -32,13 +36,26 @@ export const getProductById = async (req, res) => {
 export const getProductsByCategory = async (req, res) => {
 	try {
 		const { category } = req.params;
+		console.log("Fetching products for category:", category);
+		
 		if (!VALID_CATEGORIES.includes(category)) {
 			return res.status(404).json({ message: "Category not found" });
 		}
-		const response = await axios.get(`${FAKE_STORE_API}/products/category/${category}`);
+		
+		const url = `${FAKE_STORE_API}/products/category/${category}`;
+		console.log("Calling FakeStore API:", url);
+		
+		const response = await axios.get(url);
+		console.log("FakeStore API response:", response.data);
+		
 		res.json(response.data);
 	} catch (error) {
-		console.log("Error in getProductsByCategory controller", error.message);
+		console.error("Error in getProductsByCategory controller:", {
+			message: error.message,
+			response: error.response?.data,
+			status: error.response?.status,
+			category: req.params.category
+		});
 		res.status(500).json({ message: "Server error", error: error.message });
 	}
 };
@@ -54,15 +71,15 @@ export const getAllCategories = async (req, res) => {
 
 export const getFeaturedProducts = async (req, res) => {
 	try {
-		const featuredProducts = await Product.find({ isFeatured: true }).lean();
-
-		if (!featuredProducts) {
-			return res.status(404).json({ message: "No featured products found" });
-		}
-
-		res.json(featuredProducts);
+		// Get all products from FakeStore API and return first 4 as featured
+		const response = await axios.get(`${FAKE_STORE_API}/products?limit=4`);
+		res.json(response.data);
 	} catch (error) {
-		console.log("Error in getFeaturedProducts controller", error.message);
+		console.error("Error in getFeaturedProducts controller:", {
+			message: error.message,
+			response: error.response?.data,
+			status: error.response?.status
+		});
 		res.status(500).json({ message: "Server error", error: error.message });
 	}
 };
@@ -105,24 +122,15 @@ export const deleteProduct = async (req, res) => {
 
 export const getRecommendedProducts = async (req, res) => {
 	try {
-		const products = await Product.aggregate([
-			{
-				$sample: { size: 4 },
-			},
-			{
-				$project: {
-					_id: 1,
-					name: 1,
-					description: 1,
-					image: 1,
-					price: 1,
-				},
-			},
-		]);
-
-		res.json(products);
+		// Get all products from FakeStore API and return first 4 as recommended
+		const response = await axios.get(`${FAKE_STORE_API}/products?limit=4`);
+		res.json(response.data);
 	} catch (error) {
-		console.log("Error in getRecommendedProducts controller", error.message);
+		console.error("Error in getRecommendedProducts controller:", {
+			message: error.message,
+			response: error.response?.data,
+			status: error.response?.status
+		});
 		res.status(500).json({ message: "Server error", error: error.message });
 	}
 };
